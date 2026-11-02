@@ -244,6 +244,7 @@ footer p,footer a{color:#fff}
 .funding p{font-size:.78rem;line-height:1.5;color:#d7d8f0;flex:1 1 220px}
 .f-logos{display:flex;align-items:center;gap:1.75rem;justify-content:flex-end}
 .f-logos img{height:40px;width:auto;display:block}
+.f-logos img.deti{height:50px}
 
 @media (max-width:991px){
   .hero-text-box{grid-template-columns:1fr;gap:1.75rem}
@@ -254,7 +255,7 @@ footer p,footer a{color:#fff}
   .steps{grid-template-columns:1fr 1fr}
   .f-top{grid-template-columns:1fr}
   .f-bottom{grid-template-columns:1fr}
-  .f-logos{justify-content:flex-end}
+  .f-logos{justify-content:flex-start}
 }
 @media (max-width:767px){
   section{padding:3.5rem 0}
@@ -269,8 +270,9 @@ footer p,footer a{color:#fff}
   .poemsbtn{width:100%}
   .apply-box{padding:1.75rem}
   .org-logos{gap:2.5rem}
-  .f-logos{flex-direction:column;align-items:flex-end;gap:1rem}
+  .f-logos{flex-direction:column;align-items:flex-start;gap:1rem}
   .f-logos img{height:auto;width:240px;max-width:100%}
+  .f-logos img.deti{width:276px;height:auto}
   .f-links ul{columns:1}
 }
 </style>
@@ -563,7 +565,7 @@ footer p,footer a{color:#fff}
       </div>
       <div class="f-logos">
         <a href="https://www.ua.pt/pt/dfis" rel="noopener"><img src="assets/dfis-ua-white.png" alt="University of Aveiro – Department of Physics (DFis)" width="244" height="44"></a>
-        <a href="https://www.ua.pt/pt/deti" rel="noopener"><img src="assets/deti-ua-white.png" alt="University of Aveiro – DETI" width="225" height="44"></a>
+        <a href="https://www.ua.pt/pt/deti" rel="noopener"><img class="deti" src="assets/deti-ua-white.png" alt="University of Aveiro – DETI" width="256" height="50"></a>
       </div>
     </div>
   </div>
