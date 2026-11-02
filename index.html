@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chiplets &amp; Photonics: Hands-On School in Device Packaging | University of Aveiro</title>
+<meta name="description" content="An intensive school dedicated to the packaging of electronic and photonic devices, organised by the University of Aveiro and funded by POEMS. 1–4 February 2027, Aveiro, Portugal. Free, in English, 25 places.">
+<meta name="theme-color" content="#0000dd">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chiplets &amp; Photonics: Hands-On School in Device Packaging">
+<meta property="og:description" content="An intensive school dedicated to the packaging of electronic and photonic devices, organised by the University of Aveiro and funded by POEMS. 1–4 February 2027 · Aveiro, Portugal · Free · 25 places.">
+<!-- TODO: og:url and og:image once the final URL and a share image exist -->
+<!-- <meta property="og:url" content="TODO_SITE_URL"> -->
+<!-- <meta property="og:image" content="TODO_SITE_URL/og-image.png"> -->
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Same font families as poemscentre.eu: Exo 2 (headings/nav), Poppins (text), DM Mono (section eyebrows) -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Exo+2:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Design tokens taken from poemscentre.eu/css/geral.css */
+:root{
+  --primary-color:#0000dd;
+  --text-color:#000000cc;
+  --title-color:#000000cc;
+  --icons-color:#313131;
+  --box-bg:#f5f6fa;
+  --grey-bg:#f6f6f6;
+  --footer-bg:#17166e;
+  --primary-shadow:0 32px 24px -16px #00000040;
+  --secondary-shadow:0 12px 24px -16px #00000040;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{font-family:"Poppins",sans-serif;color:var(--text-color);background:#fff;font-size:16px}
+h1,h2,h3,h4{font-family:"Exo 2",sans-serif;color:var(--title-color)}
+h2{font-size:calc(1.375rem + 1.5vw);font-weight:600;line-height:1.2;margin-bottom:1.5rem}
+h3{font-size:1.3rem;font-weight:600}
+h4{font-size:1rem;font-weight:700;margin-bottom:.5rem}
+p{line-height:24px;color:var(--text-color)}
+p+p{margin-top:1rem}
+b,strong{font-weight:600}
+a{color:var(--text-color);font-weight:600}
+a:hover{color:var(--primary-color)}
+a:focus-visible,button:focus-visible{outline:3px solid #7aa7ff;outline-offset:3px}
+ul,ol{list-style:none}
+.container{width:91.6667%;max-width:1140px;margin:0 auto}
+@media (min-width:1200px){.container{width:83.3333%}}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;padding:8px 14px;z-index:2000}
+.skip:focus{left:8px}
+section{padding:5rem 0}
+.bg-grey{background:var(--box-bg)}
+.ph{background:#fff4c2;color:#5a4500;border:1px dashed #b8902a;padding:0 .3em;font-weight:600;white-space:nowrap}
+
+/* Section eyebrow (".section-eyebrow" in geral.css) */
+.section-eyebrow{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--primary-color);display:flex;align-items:center;gap:10px;margin-bottom:.6rem}
+.section-eyebrow::before{content:"";width:20px;height:2px;background:var(--primary-color);border-radius:2px}
+
+/* HEADER (header.css) */
+header.site{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg,rgba(0,0,0,.9) 24%,transparent 100%);transition:background .3s}
+header.site.scrolled{background:rgba(10,10,40,.96)}
+header.site .container{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand img{height:36px;width:auto;display:block}
+header nav ul{display:flex;align-items:center}
+header nav li{margin-left:2rem}
+header nav a{color:#fff;text-decoration:none;font-family:"Exo 2",sans-serif;font-weight:600;text-transform:uppercase;font-size:.9rem}
+header nav a:hover{color:#fff;opacity:.8}
+header nav a.nav-apply{border:1px solid #fff;padding:8px 18px}
+header nav li.lang{display:flex;align-items:center;gap:6px;font-family:"Exo 2",sans-serif;font-weight:600;font-size:.9rem;color:#fff}
+.lang-opt{font:inherit;color:#fff;background:transparent;border:0;padding:2px 0}
+.lang-opt.active{border-bottom:2px solid #fff}
+button.lang-opt[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.lang-sep{opacity:.5}
+header nav a.nav-apply:hover{background:#fff;color:var(--primary-color);opacity:1}
+.menu-btn{display:none;background:transparent;border:0;color:#fff;width:44px;height:44px;cursor:pointer}
+.menu-btn svg{width:26px;height:26px}
+@media (max-width:1100px){
+  .menu-btn{display:grid;place-items:center;order:3;margin-right:-8px}
+  header nav ul{display:none;position:absolute;top:72px;left:0;right:0;flex-direction:column;align-items:stretch;background:rgba(10,10,40,.97);padding:.5rem 1.5rem 1.5rem}
+  header nav ul.open{display:flex}
+  header nav li{margin:0}
+  header nav a{display:block;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.12)}
+  header nav a.nav-apply{text-align:center;margin-top:1rem;border:1px solid #fff}
+  header nav li.lang{padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.12)}
+}
+
+/* BANNER + HERO BOX (".container-banner-img", ".hero-text-box") */
+.banner{position:relative;height:70vh;min-height:600px;max-height:720px;clip-path:polygon(0 0,100% 0,100% 80%,0 95%);background-color:#2b1fa6;overflow:hidden}
+.banner svg.art{position:absolute;inset:0;width:100%;height:100%}
+.banner::after{content:"";position:absolute;inset:0;background:#123c9e8c}
+.banner-text{position:relative;z-index:1;padding-top:120px;display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.banner-text .big{font-family:"Exo 2",sans-serif;font-weight:700;text-transform:uppercase;color:#fff;font-size:calc(1rem + 2.6vw);line-height:1.05;opacity:.9}
+.banner-text .when{font-family:"Exo 2",sans-serif;font-weight:700;text-transform:uppercase;color:#fff;font-size:calc(1rem + 1.6vw);line-height:1.1;text-align:right;opacity:.9}
+.banner-text .when small{display:block;font-size:.5em;font-weight:600;text-transform:none;margin-top:.6rem}
+.hero-wrap{position:relative;margin-top:-260px;z-index:2}
+.hero-text-box{background:var(--box-bg);padding:2rem;box-shadow:0 32px 24px -16px rgba(0,0,0,.25);display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+.hero-text-box h1{font-size:calc(1.3rem + 1.2vw);font-weight:500;line-height:1.2;color:#333}
+.event-details{display:flex;gap:.5rem 2rem;flex-wrap:wrap;margin:1rem 0 1.5rem}
+.event-details div{display:flex;align-items:center;gap:.5rem;font-size:.95rem}
+.event-details img{width:1rem;height:1rem}
+.hero-text-box .facts{font-size:.95rem}
+.hero-text-box .facts b{display:block;margin-bottom:.25rem}
+.hero-text-box .free{margin-top:1.25rem;font-weight:600}
+.hero-actions{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.75rem}
+.org-box{text-align:center;min-width:220px;padding-top:.5rem;align-self:center}
+.org-box h4{font-weight:600;font-size:1.1rem;color:#333;margin-bottom:.75rem}
+.org-box img{width:220px;height:auto;display:block;margin:0 auto}
+.org-box p{font-size:.85rem;line-height:1.4;margin-top:.75rem}
+
+/* BUTTONS (".poemsbtn" in geral.css + solid variant) */
+.poemsbtn{text-decoration:none;display:inline-block;color:var(--primary-color);position:relative;line-height:50px;height:50px;text-align:center;width:250px;font-weight:600;z-index:0;transition:all .5s}
+.poemsbtn::before{content:"";position:absolute;inset:0;z-index:-1;background:#e9eaf2;transition:all .3s}
+.poemsbtn:hover::before{opacity:0;transform:scale(.5,.5)}
+.poemsbtn::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;transition:all .3s;border:1px solid var(--primary-color);transform:scale(1.2,1.2)}
+.poemsbtn:hover::after{opacity:1;transform:scale(1,1)}
+.poemsbtn.solid{color:#fff}
+.poemsbtn.solid::before{background:var(--primary-color)}
+.poemsbtn.solid:hover{color:var(--primary-color)}
+.poemsbtn.white{color:var(--primary-color)}
+.poemsbtn.white::before{background:#fff}
+.poemsbtn.white::after{border-color:#fff}
+.poemsbtn.white:hover{color:#fff}
+.hr-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--primary-color)}
+.hr-line-btn{height:4px;width:2rem;border-radius:40px;margin-right:.5rem;background:var(--primary-color);transition:width .3s ease-in-out}
+.hr-link:hover .hr-line-btn{width:5rem}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:3rem;align-items:start}
+.borderLeft{position:relative;padding:1.5rem 1.5rem 1.5rem 2rem;background:var(--box-bg)}
+.borderLeft::before{content:"";position:absolute;left:0;top:0;width:5px;height:100%;background:var(--primary-color);border-radius:10px}
+.glance li{margin:.6rem 0;font-size:.95rem;line-height:1.5}
+.glance h3{text-transform:uppercase;font-size:1rem;margin-bottom:.5rem}
+
+/* TOPICS */
+.topics{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem 2.5rem}
+.topic{position:relative;padding-left:1.5rem}
+.topic::before{content:"";position:absolute;left:0;top:.2rem;width:5px;height:calc(100% - .2rem);background:var(--primary-color);border-radius:10px}
+.topic h4{font-size:1.1rem;font-weight:600;margin-bottom:.35rem}
+.topic p{font-size:.95rem}
+
+/* PROGRAMME (earlier custom design: day tabs + session cards + rotation view) */
+.prov{display:inline-block;background:#fff4c2;color:#5a4500;border:1px solid #e8cf7a;padding:.25rem .75rem;font-size:.85rem;font-weight:600;margin-bottom:1.5rem}
+.tabs{display:flex;gap:10px;margin-bottom:20px}
+.tab{flex:1;min-width:128px;background:#fff;border:1px solid #dcdde6;padding:14px 18px;text-align:left;cursor:pointer;font-family:"Poppins",sans-serif;color:#666;transition:background .2s,border-color .2s}
+.tab b{display:block;font-family:"Exo 2",sans-serif;font-size:1.2rem;font-weight:600;color:#333}
+.tab small{font-size:.82rem}
+.tab:hover{border-color:var(--primary-color)}
+.tab[aria-selected="true"]{background:var(--primary-color);border-color:var(--primary-color);color:#fff;box-shadow:var(--secondary-shadow)}
+.tab[aria-selected="true"] b{color:#fff}
+.day{background:#fff;border:1px solid #e3e4ec;padding:32px 36px;box-shadow:var(--secondary-shadow)}
+.day.anim{animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.day h3{text-transform:none;font-size:1.45rem;color:#333}
+.day h3 span{color:var(--primary-color)}
+.day .sub{color:#666;font-size:.95rem;margin:.25rem 0 1rem}
+.slots li.slot{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:18px 0;border-top:1px solid #ececf2}
+.slots li.slot:first-child{border-top:0}
+.when{font-weight:600;color:var(--primary-color);font-size:.95rem;line-height:24px}
+.slot h4{font-family:"Poppins",sans-serif;font-size:1rem;font-weight:600;color:#333;margin:0}
+.slot p{font-size:.92rem;margin-top:.3rem}
+.code{display:inline-block;font-family:"DM Mono",monospace;font-size:.72rem;font-weight:500;letter-spacing:.04em;background:#e6e6fb;color:var(--primary-color);padding:2px 8px;margin-right:10px;vertical-align:2px}
+.code.p{background:#17166e;color:#fff}
+.groups{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.groups div{background:var(--box-bg);border-left:4px solid var(--primary-color);padding:12px 14px;font-size:.88rem;line-height:1.45}
+.groups div.free{border-left-color:#b9b9c9}
+.prog-note{margin-top:2rem;font-size:.95rem}
+@media (max-width:767px){
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .tab{min-width:0;padding:10px 6px;text-align:center}
+  .tab b{font-size:1rem}
+  .tab small{font-size:.72rem;display:block;line-height:1.3}
+  .day{padding:22px 18px}
+  .slots li.slot{grid-template-columns:1fr;gap:4px}
+  .groups{grid-template-columns:1fr}
+}
+
+/* LISTS WITH CHECK ICON */
+.check-list li{display:flex;gap:1rem;margin:1rem 0;line-height:1.5}
+.check-list li::before{content:"";flex:none;width:1.2rem;height:1rem;margin-top:.2rem;background:url("assets/check-icon.svg") center/contain no-repeat}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.two h3{font-size:1.15rem;text-transform:none;margin-bottom:.25rem}
+
+/* PRACTICAL */
+.practical{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.borderBottom{position:relative;padding:1.5rem 0 1.75rem}
+.borderBottom::before{content:"";position:absolute;left:0;bottom:0;width:100%;height:5px;background:var(--primary-color);border-radius:10px}
+.borderBottom h4{font-size:1.15rem;font-weight:600}
+.borderBottom p{font-size:.95rem}
+
+/* APPLY */
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-bottom:3rem}
+.steps li{counter-increment:s}
+.steps li::before{content:counter(s,decimal-leading-zero);display:block;font-family:"Exo 2",sans-serif;font-weight:700;font-size:2.2rem;color:var(--primary-color);line-height:1;margin-bottom:.5rem}
+.steps h4{font-size:1.05rem;font-weight:600}
+.steps p{font-size:.92rem}
+.apply-box{background:var(--primary-color);color:#fff;padding:2.5rem;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;box-shadow:var(--primary-shadow)}
+.apply-box h3{color:#fff;text-transform:uppercase;margin-bottom:.4rem}
+.apply-box p{color:#fff}
+.apply-box .dates{display:flex;flex-wrap:wrap;gap:.5rem 2rem;margin-top:.75rem;font-size:.92rem}
+
+/* ORGANISERS (logo band, as on the Spring School page) */
+.org{background:var(--grey-bg);text-align:center;border-top:1px solid #e2e3ea}
+.org-logos{display:flex;justify-content:center;align-items:flex-end;gap:4rem;flex-wrap:wrap;margin:2rem 0}
+.org-logos h4{font-weight:600;font-size:1.2rem;color:#333;margin-bottom:.75rem}
+.org-logos img{display:block;margin:0 auto;height:56px;width:auto}
+.org p{max-width:760px;margin:0 auto}
+.supporters{margin:2.5rem auto 0;max-width:760px;border:2px dashed #b9b9c9;padding:1.75rem;background:#fff}
+.supporters strong{font-family:"Exo 2",sans-serif;font-size:1.15rem;color:#333}
+.supporters small{display:block;margin-top:.35rem;color:#555}
+
+/* CONTACT */
+.contact{text-align:center}
+.contact .section-eyebrow{justify-content:center}
+.contact .mail{font-size:1.15rem;margin:1rem 0 2rem}
+
+/* FOOTER */
+footer{background:var(--footer-bg);color:#fff;padding:3.5rem 0 2.5rem}
+footer p,footer a{color:#fff}
+.f-top{display:grid;grid-template-columns:1.4fr 1fr;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.15)}
+.f-top img{height:36px;width:auto;margin-bottom:1rem}
+.f-top p{font-size:.85rem;color:#d7d8f0}
+.f-links h5{font-family:"DM Mono",monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:#b9bbe6;margin-bottom:.75rem;font-weight:400}
+.f-links ul{columns:2;column-gap:2rem}
+.f-links li{margin:0 0 .6rem}
+.f-links a{text-decoration:none;font-size:.85rem}
+.f-links a:hover{text-decoration:underline;color:#fff}
+.f-bottom{display:grid;grid-template-columns:1fr auto;align-items:end;gap:2rem;padding-top:2rem}
+.funding{display:flex;align-items:center;gap:1.25rem 1.5rem;flex-wrap:wrap;max-width:520px}
+.funding img{height:34px;width:auto}
+.funding p{font-size:.78rem;line-height:1.5;color:#d7d8f0;flex:1 1 220px}
+.f-logos{display:flex;align-items:center;gap:1.75rem;justify-content:flex-end}
+.f-logos img{height:40px;width:auto;display:block}
+
+@media (max-width:991px){
+  .hero-text-box{grid-template-columns:1fr}
+  .org-box{text-align:left;padding-top:1.25rem;border-top:1px solid #dcdde6}
+  .org-box img{margin:0}
+  .about-grid,.two{grid-template-columns:1fr;gap:2rem}
+  .topics{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .f-top{grid-template-columns:1fr}
+  .f-bottom{grid-template-columns:1fr}
+  .f-logos{justify-content:flex-end}
+}
+@media (max-width:767px){
+  section{padding:3.5rem 0}
+  .banner{height:auto;min-height:440px}
+  .banner-text{padding-top:100px;flex-direction:column;gap:1rem}
+  .banner-text .big{font-size:2rem}
+  .banner-text .when{text-align:left;font-size:1.5rem}
+  .hero-wrap{margin-top:-120px}
+  .hero-text-box{padding:1.5rem}
+  .topics,.practical,.steps{grid-template-columns:1fr}
+  .poemsbtn{width:100%}
+  .apply-box{padding:1.75rem}
+  .org-logos{gap:2.5rem}
+  .f-logos{flex-direction:column;align-items:flex-end;gap:1rem}
+  .f-logos img{height:auto;width:240px;max-width:100%}
+  .f-links ul{columns:1}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="container">
+    <a class="brand" href="https://www.poemscentre.eu" rel="noopener"><img src="assets/poems-logo-white.svg" alt="POEMS – Portuguese Competence Centre in Semiconductors (poemscentre.eu)" width="126" height="36"></a>
+    <button class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <nav aria-label="Main">
+      <ul id="menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#programme">Programme</a></li>
+        <li><a href="#eligibility">Who can apply</a></li>
+        <li><a href="#practical">Practical info</a></li>
+        <li><a href="#organisers">Organisers</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <!-- TODO: future PT-PT toggle. Visual only for now: no translation, no behaviour. -->
+        <li class="lang" role="group" aria-label="Language"><span class="lang-opt active" aria-current="true" lang="en">EN</span><span class="lang-sep" aria-hidden="true">/</span><button type="button" class="lang-opt" aria-disabled="true" lang="pt" title="Portuguese version coming soon">PT</button></li>
+        <!-- TODO: replace href="#" with FORM_URL (application form) -->
+        <li><a class="nav-apply" href="#">Apply now</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Banner: original line-art (no third-party images) -->
+  <div class="banner" aria-hidden="true">
+    <svg class="art" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="3">
+      <rect x="760" y="250" width="420" height="300" rx="10"/>
+      <rect x="790" y="280" width="150" height="150" rx="6"/>
+      <path d="M815 280v150M840 280v150M865 280v150M890 280v150M915 280v150M790 305h150M790 330h150M790 355h150M790 380h150M790 405h150"/>
+      <rect x="965" y="280" width="185" height="80" rx="6"/>
+      <rect x="965" y="380" width="185" height="50" rx="6"/>
+      <path d="M800 500c60-60 120 40 180 0s120-50 170 0" stroke-width="5"/>
+      <path d="M760 290h-60M760 330h-60M760 370h-60M760 410h-60M760 450h-60M760 490h-60M760 530h-60"/>
+      <path d="M1180 290h60M1180 330h60M1180 370h60M1180 410h60M1180 450h60M1180 490h60M1180 530h60"/>
+      <path d="M800 250v-50M850 250v-50M900 250v-50M950 250v-50M1000 250v-50M1050 250v-50M1100 250v-50M1150 250v-50"/>
+      <path d="M0 610h300l40-40h200l40 40h160M1240 330h120l40-40h40M1240 450h80l40 40h80M100 520h180l30-30h160"/>
+      <circle cx="300" cy="610" r="7"/><circle cx="1360" cy="330" r="7"/><circle cx="1320" cy="450" r="7"/><circle cx="280" cy="520" r="7"/>
+    </svg>
+    <div class="container banner-text">
+      <div class="big">Chiplets &amp;<br>Photonics<br>School 2027</div>
+      <div class="when">1 &gt; 4 February<small>University of Aveiro, Portugal</small></div>
+    </div>
+  </div>
+
+  <div class="container hero-wrap">
+    <div class="hero-text-box">
+      <div>
+        <h1>Chiplets &amp; Photonics: Hands-On School in Device Packaging</h1>
+        <div class="event-details">
+          <div><img src="assets/location-icon.svg" alt="" width="16" height="16">University of Aveiro, Portugal</div>
+          <div><img src="assets/calendar-icon.svg" alt="" width="16" height="16">1–4 February 2027</div>
+        </div>
+        <p class="facts"><b>Key facts</b>Intensive · In English · 25 places · Lectures and hands-on small-group sessions</p>
+        <p class="free">The school is free – no application or registration fees will be charged.</p>
+        <div class="hero-actions">
+          <!-- TODO: replace href="#" with FORM_URL (application form) -->
+          <a class="poemsbtn solid" href="#">Apply now</a>
+          <a class="poemsbtn" href="#programme">See the programme</a>
+        </div>
+      </div>
+      <div class="org-box">
+        <h4>Organised by</h4>
+        <a href="https://www.ua.pt" rel="noopener"><img src="assets/ua-logo-colour.png" alt="Universidade de Aveiro (University of Aveiro)" width="220" height="53"></a>
+      </div>
+    </div>
+  </div>
+
+  <section id="about" aria-labelledby="about-h">
+    <div class="container about-grid">
+      <div>
+        <div class="section-eyebrow">Check out</div>
+        <h2 id="about-h">About the School</h2>
+        <p>An intensive school dedicated to the packaging of electronic and photonic devices, with a forward-looking perspective on the field. The program covers an overview of packaging, electro-optical characterization techniques (case studies), photonic devices (case studies), and software tools for chiplet packaging. It combines lectures with hands-on small-group sessions and complementary activities. The school is national in scope and targets students with a bachelor's degree in STEM field.</p>
+        <p>Organised by the <b>University of Aveiro (UA)</b> and funded by <a href="https://www.poemscentre.eu" rel="noopener">POEMS – Portuguese Competence Centre in Semiconductors</a>. POEMS is co-funded by Chips JU (grant 101217646) and FCT.</p>
+      </div>
+      <aside class="borderLeft glance" aria-label="At a glance">
+        <h3>At a glance</h3>
+        <ul>
+          <li><b>Dates:</b> Monday 1 – Thursday 4 February 2027</li>
+          <li><b>Venue:</b> University of Aveiro campus, Aveiro – room <span class="ph">[TBA]</span></li>
+          <li><b>Format:</b> intensive; lectures + hands-on sessions</li>
+          <li><b>Language:</b> English</li>
+          <li><b>Places:</b> 25 participants</li>
+          <li><b>Cost:</b> free, meals included</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section id="topics" class="bg-grey" aria-labelledby="topics-h">
+    <div class="container">
+      <div class="section-eyebrow">What you'll learn</div>
+      <h2 id="topics-h">Topics</h2>
+      <div class="topics">
+        <div class="topic"><h4>Packaging fundamentals</h4><p>Core concepts of device packaging for electronic and photonic systems.</p></div>
+        <div class="topic"><h4>Chiplets &amp; integration</h4><p>How different components come together in one package.</p></div>
+        <div class="topic"><h4>Characterisation</h4><p>Electro-optical characterisation techniques, through case studies and in the lab.</p></div>
+        <div class="topic"><h4>Photonic devices</h4><p>An overview of photonic devices and their place in packaged systems.</p></div>
+        <div class="topic"><h4>Design &amp; simulation tools</h4><p>A first look at software tools used in chiplet packaging.</p></div>
+        <div class="topic"><h4>Hands-on practice</h4><p>Small-group practical sessions with close interaction with trainers.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="programme" aria-labelledby="prog-h">
+    <div class="container">
+      <div class="section-eyebrow">Review our</div>
+      <h2 id="prog-h">Programme</h2>
+      <p class="prov" role="note">Provisional programme – subject to change</p>
+
+      <div class="tabs" role="tablist" aria-label="Programme days">
+        <button class="tab" role="tab" id="t1" aria-controls="d1" aria-selected="true"><b>Day 1</b><small>Mon 1 Feb</small></button>
+        <button class="tab" role="tab" id="t2" aria-controls="d2" aria-selected="false" tabindex="-1"><b>Day 2</b><small>Tue 2 Feb</small></button>
+        <button class="tab" role="tab" id="t3" aria-controls="d3" aria-selected="false" tabindex="-1"><b>Day 3</b><small>Wed 3 Feb</small></button>
+        <button class="tab" role="tab" id="t4" aria-controls="d4" aria-selected="false" tabindex="-1"><b>Day 4</b><small>Thu 4 Feb</small></button>
+      </div>
+
+      <div class="day" role="tabpanel" id="d1" aria-labelledby="t1" tabindex="0">
+        <h3><span>Day 1</span> | Monday, 1 February</h3>
+        <p class="sub">Welcome and foundations</p>
+        <ol class="slots">
+          <li class="slot"><div class="when">Morning</div><div><h4>Reception of participants</h4></div></li>
+          <li class="slot"><div class="when">Morning</div><div><h4><span class="code">T0</span>Packaging overview</h4></div></li>
+          <li class="slot"><div class="when">Afternoon</div><div><h4><span class="code">T1</span>Characterisation techniques: case studies</h4></div></li>
+        </ol>
+        <!-- TODO: exact times for Day 1 -->
+      </div>
+
+      <div class="day" role="tabpanel" id="d2" aria-labelledby="t2" tabindex="0" hidden>
+        <h3><span>Day 2</span> | Tuesday, 2 February</h3>
+        <p class="sub">Packaging toolkit training and first hands-on</p>
+        <ol class="slots">
+          <li class="slot"><div class="when">Morning</div><div><h4><span class="code">T3</span>Hands-on chiplet packaging toolkit: training session</h4><p>Dedicated material and a hands-on part.</p></div></li>
+          <li class="slot"><div class="when">Afternoon</div><div><h4><span class="code p">P</span>Parallel hands-on practical sessions</h4><p>Practical sessions in small groups, with close interaction with trainers and peers.</p></div></li>
+        </ol>
+        <!-- TODO: exact times for Day 2 -->
+      </div>
+
+      <div class="day" role="tabpanel" id="d3" aria-labelledby="t3" tabindex="0" hidden>
+        <h3><span>Day 3</span> | Wednesday, 3 February</h3>
+        <p class="sub">Hands-on practical sessions in rotation</p>
+        <ol class="slots">
+          <li class="slot"><div class="when">All day</div><div><h4><span class="code p">P1</span>Characterisation lab training</h4><p>Structures and chiplets, in the labs of the Department of Physics.</p></div></li>
+          <li class="slot"><div class="when">All day</div><div><h4><span class="code p">P3</span>Hands-on chiplet packaging toolkit</h4><p>Guided practical work in small groups.</p></div></li>
+          <li class="slot"><div class="when">Rotation</div><div><h4>3 groups of 8–9 participants</h4><p>The 25 participants rotate between P1, P3 and free time.</p>
+            <div class="groups"><div><b>P1</b><br>Characterisation lab</div><div><b>P3</b><br>Chiplet packaging toolkit</div><div class="free"><b>Free time</b><br>Off-rotation slot</div></div></div></li>
+        </ol>
+        <!-- TODO: exact rotation schedule / times for Day 3 -->
+      </div>
+
+      <div class="day" role="tabpanel" id="d4" aria-labelledby="t4" tabindex="0" hidden>
+        <h3><span>Day 4</span> | Thursday, 4 February</h3>
+        <p class="sub">Photonics, design tools and closing</p>
+        <ol class="slots">
+          <li class="slot"><div class="when"><span class="ph">[Time TBA]</span></div><div><h4><span class="code">T2A</span>Photonic devices: overview</h4></div></li>
+          <li class="slot"><div class="when"><span class="ph">[Time TBA]</span></div><div><h4><span class="code">T2B</span>Design and simulation software</h4><p>Software tools for photonics and packaging integration.</p></div></li>
+          <li class="slot"><div class="when"><span class="ph">[Time TBA]</span></div><div><h4><span class="code">Tfinal</span>Closing talk</h4></div></li>
+          <li class="slot"><div class="when">Closing</div><div><h4>Farewell</h4><p>Group photos and satisfaction survey.</p></div></li>
+        </ol>
+      </div>
+
+      <p class="prog-note"><b>Trainers and speakers will be announced soon.</b> Timings, rooms and session details may change.</p>
+    </div>
+  </section>
+
+  <section id="eligibility" class="bg-grey" aria-labelledby="elig-h">
+    <div class="container">
+      <div class="section-eyebrow">Applications</div>
+      <h2 id="elig-h">Who can apply</h2>
+      <p style="max-width:820px;margin-bottom:2rem">The school is open to <b>MSc and PhD students from any STEM area</b> who are studying or working in Portugal – any nationality is welcome. Proficiency in English is essential, as all sessions are in English.</p>
+      <div class="two">
+        <div>
+          <h3>Eligibility</h3>
+          <ul class="check-list">
+            <li>MSc and PhD students in any STEM field (Science, Technology, Engineering, Mathematics)</li>
+            <li>Studying or working in Portugal, of any nationality</li>
+            <li>Company staff with a minimum education level compatible with an MSc/PhD in STEM</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Selection</h3>
+          <ul class="check-list">
+            <li>Academic record / CV</li>
+            <li>Motivation letter</li>
+            <li>Recommendation letter (optional)</li>
+            <li>Diversity is taken into account – limited to 25 places</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="practical" aria-labelledby="prac-h">
+    <div class="container">
+      <div class="section-eyebrow">Good to know</div>
+      <h2 id="prac-h">Practical Information</h2>
+      <div class="practical">
+        <div class="borderBottom"><h4>Free of charge</h4><p>No application or registration fees.</p></div>
+        <div class="borderBottom"><h4>Meals</h4><p>Meals during the school are guaranteed.</p></div>
+        <div class="borderBottom"><h4>Accommodation &amp; travel</h4><p>Accommodation and transport are the participant's own responsibility.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="apply" class="bg-grey" aria-labelledby="apply-h">
+    <div class="container">
+      <div class="section-eyebrow">How to apply</div>
+      <h2 id="apply-h">Application</h2>
+      <ol class="steps">
+        <li><h4>Prepare your documents</h4><p>CV, motivation letter and, optionally, a recommendation letter.</p></li>
+        <li><h4>Fill in the online form</h4><p>Personal data, institution/company and education level.</p></li>
+        <li><h4>Upload &amp; submit</h4><p>Attach your CV, motivation letter and optional recommendation letter.</p></li>
+        <li><h4>Selection &amp; registration</h4><p>Selected applicants are notified and then confirm their registration.</p></li>
+      </ol>
+      <div class="apply-box">
+        <div>
+          <h3>Ready to join?</h3>
+          <p>Free · 25 places · 1–4 February 2027, University of Aveiro</p>
+          <div class="dates">
+            <span>Application deadline: <span class="ph">[TBA]</span></span>
+            <span>Registration deadline: <span class="ph">[TBA]</span></span>
+          </div>
+        </div>
+        <!-- TODO: replace href="#" with FORM_URL (application form) -->
+        <a class="poemsbtn white" href="#">Apply now</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="organisers" class="org" aria-labelledby="org-h">
+    <div class="container">
+      <h2 id="org-h" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Organisers</h2>
+      <div class="org-logos">
+        <div><h4>Organised by</h4><a href="https://www.ua.pt" rel="noopener"><img src="assets/ua-logo-colour.png" alt="Universidade de Aveiro (University of Aveiro)" width="233" height="56"></a></div>
+        <div><h4>Funded by</h4><a href="https://www.poemscentre.eu" rel="noopener"><img src="assets/poems-logo-blue.svg" alt="POEMS – Portuguese Competence Centre in Semiconductors" width="196" height="56"></a></div>
+      </div>
+      <p>Organised by the <b>University of Aveiro (UA)</b> and funded by <b>POEMS – Portuguese Competence Centre in Semiconductors</b>. POEMS is co-funded by Chips JU (grant 101217646) and FCT.</p>
+      <div class="supporters" role="note"><strong>[Supporters – to be added]</strong><small>Supporters do not provide funding to the school.</small></div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <div class="container">
+      <div class="section-eyebrow">Get in touch</div>
+      <h2 id="contact-h">Contact</h2>
+      <p>Questions about the school? Contact the organising team.</p>
+      <!-- TODO: replace with real contact email (mailto:) -->
+      <p class="mail"><span class="ph">[contact email TBA]</span></p>
+      <a class="hr-link" href="#"><span class="hr-line-btn" aria-hidden="true"></span>Apply now</a><!-- TODO: FORM_URL -->
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="f-top">
+      <div>
+        <a href="https://www.poemscentre.eu" rel="noopener"><img src="assets/poems-logo-white.svg" alt="POEMS – Portuguese Competence Centre in Semiconductors" width="126" height="36"></a>
+        <p><b style="color:#fff">Chiplets &amp; Photonics: Hands-On School in Device Packaging</b><br>1–4 February 2027 · Aveiro, Portugal<br>Organised by the University of Aveiro · Funded by POEMS</p>
+      </div>
+      <nav class="f-links" aria-label="Footer">
+        <h5>The school</h5>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#programme">Programme</a></li>
+          <li><a href="#eligibility">Who can apply</a></li>
+          <li><a href="#apply">How to apply</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="https://www.poemscentre.eu" rel="noopener">poemscentre.eu</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="f-bottom">
+      <div class="funding">
+        <img src="assets/fct-logo-white.png" alt="FCT – Fundação para a Ciência e a Tecnologia" width="133" height="34">
+        <img src="assets/chipsju-logo-white.png" alt="Chips JU – Chips Joint Undertaking" width="115" height="34">
+        <p>Funded by POEMS. POEMS is co-funded by Chips JU (grant 101217646) and FCT.</p>
+      </div>
+      <div class="f-logos">
+        <a href="https://www.ua.pt/pt/dfis" rel="noopener"><img src="assets/dfis-ua-white.png" alt="University of Aveiro – Department of Physics (DFis)" width="244" height="44"></a>
+        <a href="https://www.ua.pt/pt/deti" rel="noopener"><img src="assets/deti-ua-white.png" alt="University of Aveiro – DETI" width="225" height="44"></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var header=document.querySelector('header.site');
+  function onScroll(){header.classList.toggle('scrolled',window.scrollY>40);}
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  var btn=document.querySelector('.menu-btn'),menu=document.getElementById('menu');
+  btn.addEventListener('click',function(){var o=menu.classList.toggle('open');btn.setAttribute('aria-expanded',o);btn.setAttribute('aria-label',o?'Close menu':'Open menu');});
+  menu.addEventListener('click',function(e){if(e.target.tagName==='A'){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}});
+  var tabs=[].slice.call(document.querySelectorAll('[role=tab]'));
+  function select(t){tabs.forEach(function(x){var s=x===t;x.setAttribute('aria-selected',s);x.tabIndex=s?0:-1;var pn=document.getElementById(x.getAttribute('aria-controls'));pn.hidden=!s;pn.classList.toggle('anim',s);});}
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){select(t);});
+    t.addEventListener('keydown',function(e){var n=null;if(e.key==='ArrowRight')n=tabs[(i+1)%tabs.length];if(e.key==='ArrowLeft')n=tabs[(i-1+tabs.length)%tabs.length];if(e.key==='Home')n=tabs[0];if(e.key==='End')n=tabs[tabs.length-1];if(n){e.preventDefault();n.focus();select(n);}});
+  });
+})();
+</script>
+</body>
+</html>
